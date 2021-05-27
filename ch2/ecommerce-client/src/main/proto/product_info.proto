@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package commerce;
+
+option java_multiple_files = true;
+option java_package = "ru.voroby.grpc.protos";
+option java_outer_classname = "ProductInfoProto";
+
+message ProductID {
+  string value = 1;
+}
+
+message Product {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  float price = 4;
+}
+
+service ProductInfo {
+  rpc addProduct(Product) returns (ProductID);
+  rpc getProduct(ProductID) returns (Product);
+}
