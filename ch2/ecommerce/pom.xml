@@ -68,6 +68,7 @@
             </extension>
         </extensions>
         <plugins>
+            <!--   Generate java files for grpc and protobuf in compile stage-->
             <plugin>
                 <groupId>org.xolstice.maven.plugins</groupId>
                 <artifactId>protobuf-maven-plugin</artifactId>
