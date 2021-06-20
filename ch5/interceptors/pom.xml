@@ -10,6 +10,7 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>oreder-service-server</module>
+        <module>order-service-client</module>
     </modules>
 
     <properties>

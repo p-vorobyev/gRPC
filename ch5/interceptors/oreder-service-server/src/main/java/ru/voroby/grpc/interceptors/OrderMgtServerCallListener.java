@@ -21,6 +21,6 @@ public class OrderMgtServerCallListener<R> extends ForwardingServerCallListener<
 
     @Override
     protected ServerCall.Listener<R> delegate() {
-        return null;
+        return delegate;
     }
 }

@@ -79,12 +79,13 @@ public class OrderMgtServiceImpl extends OrderManagementImplBase {
     @Override
     public void searchOrders(StringValue request, StreamObserver<Order> responseObserver) {
         final String searchValue = request.getValue();
-        orderMap.values().parallelStream().forEach(order -> {
+        orderMap.values().forEach(order -> {
             for (int i = 0; i < order.getItemsCount(); i++) {
                 final String item = order.getItems(i);
                 if (item.contains(searchValue)) {
                     responseObserver.onNext(order);
                     log.info("Item found: [{}]", item);
+                    break;
                 }
             }
         });

@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>oreder-service-server</artifactId>
+    <artifactId>order-service-client</artifactId>
 
     <build>
         <plugins>
@@ -20,7 +20,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>ru.voroby.grpc.OrderManagementServer</mainClass>
+                            <mainClass>ru.voroby.grpc.OrderManagementClient</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
