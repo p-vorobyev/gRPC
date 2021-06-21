@@ -117,7 +117,7 @@ public class OrderMgtServiceImpl extends OrderManagementImplBase {
             @Override
             public void onCompleted() {
                 final String result = builder.toString();
-                final StringValue value = StringValue.newBuilder().setValue(result.substring(0, result.length() - 1)).build();
+                final StringValue value = StringValue.newBuilder().setValue(result.substring(0, result.length() - 2)).build();
                 responseObserver.onNext(value);
                 responseObserver.onCompleted();
             }
