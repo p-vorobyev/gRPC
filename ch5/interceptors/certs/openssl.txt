@@ -1,0 +1,21 @@
+#create private key for my CA
+openssl genrsa -out myRoot.key 2048
+
+#create root certificate from my CA
+openssl req -x509 -new -key myRoot.key -days 10000 -out myRoot.crt
+
+#create private key for server
+openssl genrsa -out server.key 2048
+
+#create signing request for server
+openssl req -new -key server.key -out server.csr
+
+#sign and create public cert for server
+openssl x509 -req -in server.csr -CA myRoot.crt -CAkey myRoot.key -CAcreateserial -out server.crt -days 5000
+
+#convert rsa private key to pem format
+openssl pkcs8 -topk8 -inform pem -in server.key -outform pem -nocrypt -out serverKey.pem
+
+the same actions for client side
+
+https://habr.com/ru/post/192446/

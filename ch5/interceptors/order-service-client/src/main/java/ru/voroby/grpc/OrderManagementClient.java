@@ -1,22 +1,35 @@
 package ru.voroby.grpc;
 
 import io.grpc.ManagedChannel;
-import io.grpc.ManagedChannelBuilder;
+import io.grpc.netty.GrpcSslContexts;
+import io.grpc.netty.NettyChannelBuilder;
+import io.netty.handler.ssl.SslContext;
 import lombok.extern.slf4j.Slf4j;
-import ru.voroby.grpc.interceptors.OrderManagementClientInterceptor;
 import ru.voroby.grpc.protos.Order;
 import ru.voroby.grpc.protos.StringValue;
 import ru.voroby.grpc.service.OrderManagementServiceImpl;
 
+import javax.net.ssl.SSLException;
+import java.io.File;
 import java.util.Iterator;
+import java.util.Objects;
 
 @Slf4j
 public class OrderManagementClient {
-    public static void main(String[] args) {
-        final ManagedChannel channel = ManagedChannelBuilder
+    public static void main(String[] args) throws SSLException {
+        var crt = new File(getFileString("client.crt"));
+        var key = new File(getFileString("clientKey.pem"));
+        var root = new File(getFileString("myRoot.crt"));
+        final SslContext sslContext = GrpcSslContexts.forClient()
+                .keyManager(crt, key)
+                .trustManager(root).build();
+        final ManagedChannel channel = NettyChannelBuilder
+                .forAddress("localhost", 50050)
+                .sslContext(sslContext).build();
+        /*final ManagedChannel channel = ManagedChannelBuilder
                 .forAddress("localhost", 50050)
                 .intercept(new OrderManagementClientInterceptor())
-                .usePlaintext().build();
+                .usePlaintext().build();*/
 
         final var orderManagementService = new OrderManagementServiceImpl(channel);
 
@@ -47,6 +60,10 @@ public class OrderManagementClient {
 
         //bi-di streaming for processOrders
         orderManagementService.processOrders("102", "103", "104", "105");
+    }
+
+    private static String getFileString(String resource) {
+        return Objects.requireNonNull(OrderManagementClient.class.getClassLoader().getResource(resource)).getFile();
     }
 
     private static void updateOrders(OrderManagementServiceImpl service) {
