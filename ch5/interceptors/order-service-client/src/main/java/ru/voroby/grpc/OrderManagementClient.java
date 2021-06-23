@@ -5,6 +5,7 @@ import io.grpc.netty.GrpcSslContexts;
 import io.grpc.netty.NettyChannelBuilder;
 import io.netty.handler.ssl.SslContext;
 import lombok.extern.slf4j.Slf4j;
+import ru.voroby.grpc.interceptors.TokenCallAuth;
 import ru.voroby.grpc.protos.Order;
 import ru.voroby.grpc.protos.StringValue;
 import ru.voroby.grpc.service.OrderManagementServiceImpl;
@@ -16,6 +17,9 @@ import java.util.Objects;
 
 @Slf4j
 public class OrderManagementClient {
+
+    private static final String token = "secret-token";
+
     public static void main(String[] args) throws SSLException {
         var crt = new File(getFileString("client.crt"));
         var key = new File(getFileString("clientKey.pem"));
@@ -31,7 +35,7 @@ public class OrderManagementClient {
                 .intercept(new OrderManagementClientInterceptor())
                 .usePlaintext().build();*/
 
-        final var orderManagementService = new OrderManagementServiceImpl(channel);
+        final var orderManagementService = new OrderManagementServiceImpl(channel, new TokenCallAuth(token));
 
         Order order = Order.newBuilder()
                 .setId("201")

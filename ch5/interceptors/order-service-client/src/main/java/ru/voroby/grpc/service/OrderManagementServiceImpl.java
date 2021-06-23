@@ -1,5 +1,6 @@
 package ru.voroby.grpc.service;
 
+import io.grpc.CallCredentials;
 import io.grpc.ManagedChannel;
 import io.grpc.stub.StreamObserver;
 import lombok.extern.slf4j.Slf4j;
@@ -20,9 +21,9 @@ public class OrderManagementServiceImpl {
 
     private OrderManagementGrpc.OrderManagementStub asyncStub;
 
-    public OrderManagementServiceImpl(ManagedChannel channel) {
-        this.stub = OrderManagementGrpc.newBlockingStub(channel);
-        this.asyncStub = OrderManagementGrpc.newStub(channel);
+    public OrderManagementServiceImpl(ManagedChannel channel, CallCredentials callCredentials) {
+        this.stub = OrderManagementGrpc.newBlockingStub(channel).withCallCredentials(callCredentials);
+        this.asyncStub = OrderManagementGrpc.newStub(channel).withCallCredentials(callCredentials);
     }
 
     public StringValue addOrder(Order order) {
