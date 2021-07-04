@@ -1,27 +1,37 @@
 package ru.voroby.grpc;
 
-import io.grpc.ManagedChannel;
-import io.grpc.netty.GrpcSslContexts;
-import io.grpc.netty.NettyChannelBuilder;
-import io.netty.handler.ssl.SslContext;
 import lombok.extern.slf4j.Slf4j;
-import ru.voroby.grpc.interceptors.TokenCallAuth;
 import ru.voroby.grpc.protos.Order;
 import ru.voroby.grpc.protos.StringValue;
 import ru.voroby.grpc.service.OrderManagementServiceImpl;
 
+import javax.inject.Inject;
 import javax.net.ssl.SSLException;
-import java.io.File;
 import java.util.Iterator;
 import java.util.Objects;
 
 @Slf4j
 public class OrderManagementClient {
 
-    private static final String token = "secret-token";
+    //private static final String token = "secret-token";
+
+    @Inject
+    private OrderManagementServiceImpl orderManagementService;
+
+    public StringValue addOrder(Order order) {
+        final StringValue stringValue = orderManagementService.addOrder(order);
+        log.info("addOrder response: {}", stringValue.getValue());
+
+        return stringValue;
+    }
+
+    public void getOrder(StringValue stringValue) {
+        final Order orderReceived = orderManagementService.getOrder(stringValue);
+        log.info("getOrder response: \n{}", orderReceived.toString());
+    }
 
     public static void main(String[] args) throws SSLException {
-        var crt = new File(getFileString("client.crt"));
+        /*var crt = new File(getFileString("client.crt"));
         var key = new File(getFileString("clientKey.pem"));
         var root = new File(getFileString("myRoot.crt"));
         final SslContext sslContext = GrpcSslContexts.forClient()
@@ -29,14 +39,15 @@ public class OrderManagementClient {
                 .trustManager(root).build();
         final ManagedChannel channel = NettyChannelBuilder
                 .forAddress("localhost", 50050)
-                .sslContext(sslContext).build();
+                .sslContext(sslContext).build();*/
         /*final ManagedChannel channel = ManagedChannelBuilder
                 .forAddress("localhost", 50050)
                 .intercept(new OrderManagementClientInterceptor())
                 .usePlaintext().build();*/
 
-        final var orderManagementService = new OrderManagementServiceImpl(channel, new TokenCallAuth(token));
+        //final var orderManagementService = new OrderManagementServiceImpl(channel, new TokenCallAuth(token));
 
+        var orderClient = new OrderManagementClient();
         Order order = Order.newBuilder()
                 .setId("201")
                 .addItems("iPhone XS").addItems("Mac Book Pro")
@@ -44,12 +55,14 @@ public class OrderManagementClient {
                 .setPrice(2300).build();
 
         //addOrder
-        final StringValue stringValue = orderManagementService.addOrder(order);
-        log.info("addOrder response: {}", stringValue.getValue());
+        /*final StringValue stringValue = orderManagementService.addOrder(order);
+        log.info("addOrder response: {}", stringValue.getValue());*/
+        StringValue stringValue = orderClient.addOrder(order);
 
         //getOrder
-        final Order orderReceived = orderManagementService.getOrder(stringValue);
-        log.info("getOrder response: \n{}", orderReceived.toString());
+        /*final Order orderReceived = orderManagementService.getOrder(stringValue);
+        log.info("getOrder response: \n{}", orderReceived.toString());*/
+        orderClient.getOrder(stringValue);
 
         //searchOrders with stream results
         final StringValue searchValue = StringValue.newBuilder().setValue("Google").build();

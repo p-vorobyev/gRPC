@@ -9,18 +9,23 @@ import ru.voroby.grpc.protos.Order;
 import ru.voroby.grpc.protos.OrderManagementGrpc;
 import ru.voroby.grpc.protos.StringValue;
 
+import javax.ejb.Singleton;
+import javax.ejb.Stateless;
+import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
+@Singleton
 public class OrderManagementServiceImpl {
 
     private OrderManagementGrpc.OrderManagementBlockingStub stub;
 
     private OrderManagementGrpc.OrderManagementStub asyncStub;
 
+    @Inject
     public OrderManagementServiceImpl(ManagedChannel channel, CallCredentials callCredentials) {
         this.stub = OrderManagementGrpc.newBlockingStub(channel).withCallCredentials(callCredentials);
         this.asyncStub = OrderManagementGrpc.newStub(channel).withCallCredentials(callCredentials);
