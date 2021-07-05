@@ -18,7 +18,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
-@Singleton
+@Stateless
 public class OrderManagementServiceImpl {
 
     private OrderManagementGrpc.OrderManagementBlockingStub stub;

@@ -5,12 +5,14 @@ import ru.voroby.grpc.protos.Order;
 import ru.voroby.grpc.protos.StringValue;
 import ru.voroby.grpc.service.OrderManagementServiceImpl;
 
+import javax.ejb.Singleton;
 import javax.inject.Inject;
 import javax.net.ssl.SSLException;
 import java.util.Iterator;
 import java.util.Objects;
 
 @Slf4j
+@Singleton
 public class OrderManagementClient {
 
     //private static final String token = "secret-token";
@@ -28,6 +30,18 @@ public class OrderManagementClient {
     public void getOrder(StringValue stringValue) {
         final Order orderReceived = orderManagementService.getOrder(stringValue);
         log.info("getOrder response: \n{}", orderReceived.toString());
+    }
+
+    public Iterator<Order> searchOrders(StringValue stringValue) {
+        return orderManagementService.searchOrders(stringValue);
+    }
+
+    public void updateOrders() {
+        updateOrders(orderManagementService);
+    }
+
+    private void processOrders(String... ord) {
+        orderManagementService.processOrders(ord);
     }
 
     public static void main(String[] args) throws SSLException {
@@ -66,22 +80,25 @@ public class OrderManagementClient {
 
         //searchOrders with stream results
         final StringValue searchValue = StringValue.newBuilder().setValue("Google").build();
-        final Iterator<Order> searchOrders = orderManagementService.searchOrders(searchValue);
+        //final Iterator<Order> searchOrders = orderManagementService.searchOrders(searchValue);
+        final Iterator<Order> searchOrders = orderClient.searchOrders(searchValue);
         while (searchOrders.hasNext()) {
             final Order o = searchOrders.next();
             log.info("searchOrders response match: {}, \n {}", o.getId(), o);
         }
 
         //client streaming for updateOrders
-        updateOrders(orderManagementService);
+        //updateOrders(orderManagementService);
+        orderClient.updateOrders();
 
         //bi-di streaming for processOrders
-        orderManagementService.processOrders("102", "103", "104", "105");
+        //orderManagementService.processOrders("102", "103", "104", "105");
+        orderClient.processOrders("102", "103", "104", "105");
     }
 
-    private static String getFileString(String resource) {
+    /*private static String getFileString(String resource) {
         return Objects.requireNonNull(OrderManagementClient.class.getClassLoader().getResource(resource)).getFile();
-    }
+    }*/
 
     private static void updateOrders(OrderManagementServiceImpl service) {
         var ord = Order.newBuilder()
