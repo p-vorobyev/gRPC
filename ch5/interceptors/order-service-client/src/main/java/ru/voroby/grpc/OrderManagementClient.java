@@ -5,13 +5,16 @@ import ru.voroby.grpc.protos.Order;
 import ru.voroby.grpc.protos.StringValue;
 import ru.voroby.grpc.service.OrderManagementServiceImpl;
 
+import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
+import javax.ejb.Startup;
 import javax.inject.Inject;
 import javax.net.ssl.SSLException;
 import java.util.Iterator;
 import java.util.Objects;
 
 @Slf4j
+@Startup
 @Singleton
 public class OrderManagementClient {
 
@@ -44,8 +47,34 @@ public class OrderManagementClient {
         orderManagementService.processOrders(ord);
     }
 
-    public static void main(String[] args) throws SSLException {
-        /*var crt = new File(getFileString("client.crt"));
+    @PostConstruct
+    public void start() {
+        Order order = Order.newBuilder()
+                .setId("201")
+                .addItems("iPhone XS").addItems("Mac Book Pro")
+                .setDestination("San Jose, CA")
+                .setPrice(2300).build();
+        StringValue stringValue = addOrder(order);
+
+        getOrder(stringValue);
+
+        //searchOrders with stream results
+        final StringValue searchValue = StringValue.newBuilder().setValue("Google").build();
+        final Iterator<Order> searchOrders = searchOrders(searchValue);
+        while (searchOrders.hasNext()) {
+            final Order o = searchOrders.next();
+            log.info("searchOrders response match: {}, \n {}", o.getId(), o);
+        }
+
+        //client streaming for updateOrders
+        updateOrders();
+
+        //bi-di streaming for processOrders
+        processOrders("102", "103", "104", "105");
+    }
+
+    /*public static void main(String[] args) throws SSLException {
+        *//*var crt = new File(getFileString("client.crt"));
         var key = new File(getFileString("clientKey.pem"));
         var root = new File(getFileString("myRoot.crt"));
         final SslContext sslContext = GrpcSslContexts.forClient()
@@ -53,11 +82,11 @@ public class OrderManagementClient {
                 .trustManager(root).build();
         final ManagedChannel channel = NettyChannelBuilder
                 .forAddress("localhost", 50050)
-                .sslContext(sslContext).build();*/
-        /*final ManagedChannel channel = ManagedChannelBuilder
+                .sslContext(sslContext).build();*//*
+        *//*final ManagedChannel channel = ManagedChannelBuilder
                 .forAddress("localhost", 50050)
                 .intercept(new OrderManagementClientInterceptor())
-                .usePlaintext().build();*/
+                .usePlaintext().build();*//*
 
         //final var orderManagementService = new OrderManagementServiceImpl(channel, new TokenCallAuth(token));
 
@@ -69,13 +98,13 @@ public class OrderManagementClient {
                 .setPrice(2300).build();
 
         //addOrder
-        /*final StringValue stringValue = orderManagementService.addOrder(order);
-        log.info("addOrder response: {}", stringValue.getValue());*/
+        *//*final StringValue stringValue = orderManagementService.addOrder(order);
+        log.info("addOrder response: {}", stringValue.getValue());*//*
         StringValue stringValue = orderClient.addOrder(order);
 
         //getOrder
-        /*final Order orderReceived = orderManagementService.getOrder(stringValue);
-        log.info("getOrder response: \n{}", orderReceived.toString());*/
+        *//*final Order orderReceived = orderManagementService.getOrder(stringValue);
+        log.info("getOrder response: \n{}", orderReceived.toString());*//*
         orderClient.getOrder(stringValue);
 
         //searchOrders with stream results
@@ -94,7 +123,7 @@ public class OrderManagementClient {
         //bi-di streaming for processOrders
         //orderManagementService.processOrders("102", "103", "104", "105");
         orderClient.processOrders("102", "103", "104", "105");
-    }
+    }*/
 
     /*private static String getFileString(String resource) {
         return Objects.requireNonNull(OrderManagementClient.class.getClassLoader().getResource(resource)).getFile();

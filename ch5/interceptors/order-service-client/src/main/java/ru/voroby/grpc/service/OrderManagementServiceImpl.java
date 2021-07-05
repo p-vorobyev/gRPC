@@ -25,6 +25,9 @@ public class OrderManagementServiceImpl {
 
     private OrderManagementGrpc.OrderManagementStub asyncStub;
 
+    public OrderManagementServiceImpl() {
+    }
+
     @Inject
     public OrderManagementServiceImpl(ManagedChannel channel, CallCredentials callCredentials) {
         this.stub = OrderManagementGrpc.newBlockingStub(channel).withCallCredentials(callCredentials);

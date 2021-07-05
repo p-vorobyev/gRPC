@@ -21,11 +21,7 @@ public class ConfigBeans {
 
     private final String token = "secret-token";
 
-    @Inject
-    private SslContext sslContext;
-
-    @Produces
-    public SslContext sslContext() throws SSLException {
+    private SslContext sslContext() throws SSLException {
         var crt = new File(getFileString("client.crt"));
         var key = new File(getFileString("clientKey.pem"));
         var root = new File(getFileString("myRoot.crt"));
@@ -37,10 +33,10 @@ public class ConfigBeans {
 
     @Produces
     @ApplicationScoped
-    public ManagedChannel managedChannel() {
+    public ManagedChannel managedChannel() throws SSLException {
         return NettyChannelBuilder
                 .forAddress("localhost", 50050)
-                .sslContext(sslContext).build();
+                .sslContext(sslContext()).build();
     }
 
     @Produces
