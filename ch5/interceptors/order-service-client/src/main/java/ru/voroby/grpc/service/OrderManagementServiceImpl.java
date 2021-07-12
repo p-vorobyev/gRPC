@@ -9,7 +9,6 @@ import ru.voroby.grpc.protos.Order;
 import ru.voroby.grpc.protos.OrderManagementGrpc;
 import ru.voroby.grpc.protos.StringValue;
 
-import javax.ejb.Singleton;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.util.Arrays;

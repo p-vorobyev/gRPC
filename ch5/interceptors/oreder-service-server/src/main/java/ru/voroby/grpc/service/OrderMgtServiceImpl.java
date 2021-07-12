@@ -104,7 +104,7 @@ public class OrderMgtServiceImpl extends OrderManagementImplBase {
                     orderMap.put(order.getId(), order);
                     log.info("Order updated: [id: {}].", order.getId());
                     builder.append(order.getId()).append(",");
-                    return null;
+                    return order;
                 }).orElseGet(() -> {
                     log.warn("Null value received for update.");
                     return null;

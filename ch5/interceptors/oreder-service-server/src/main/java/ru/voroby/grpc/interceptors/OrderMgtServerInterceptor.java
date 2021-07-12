@@ -3,12 +3,11 @@ package ru.voroby.grpc.interceptors;
 import io.grpc.Metadata;
 import io.grpc.ServerCall;
 import io.grpc.ServerCallHandler;
-import io.grpc.ServerInterceptor;
 import io.grpc.Status;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class OrderMgtServerInterceptor implements ServerInterceptor {
+public class OrderMgtServerInterceptor implements io.grpc.ServerInterceptor {
 
     private String TOKEN = "secret-token";
 

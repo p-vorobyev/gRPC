@@ -8,11 +8,8 @@ import io.netty.handler.ssl.SslContext;
 import ru.voroby.grpc.OrderManagementClient;
 import ru.voroby.grpc.interceptors.TokenCallAuth;
 
-import javax.ejb.Stateless;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.net.ssl.SSLException;
 import java.io.File;
 import java.util.Objects;
