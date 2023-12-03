@@ -24,7 +24,7 @@
         <assembly.version>3.1.0</assembly.version>
         <!--dependencies-->
         <grpc.version>1.38.0</grpc.version>
-        <protobuf.version>3.17.1</protobuf.version>
+        <protobuf.version>3.19.6</protobuf.version>
         <!--logging-->
         <logback.version>1.2.3</logback.version>
         <slf4j.version>1.7.30</slf4j.version>
