@@ -23,7 +23,7 @@
         <surefire.version>3.0.0-M4</surefire.version>
         <assembly.version>3.1.0</assembly.version>
         <!--dependencies-->
-        <grpc.version>1.38.0</grpc.version>
+        <grpc.version>1.53.0</grpc.version>
         <protobuf.version>3.17.1</protobuf.version>
         <!--logging-->
         <logback.version>1.2.3</logback.version>
